@@ -33,8 +33,6 @@ export class ApiError extends Error {
     this.details = details || null;
   }
 }
-  }
-}
 
 export async function apiRequest(path, { method = 'GET', body, auth = true, idempotencyKey } = {}) {
   const headers = { 'Content-Type': 'application/json', ...deviceHeaders() };
