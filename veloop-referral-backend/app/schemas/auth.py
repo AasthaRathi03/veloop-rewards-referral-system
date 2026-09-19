@@ -20,8 +20,18 @@ class DeviceSignalsIn(BaseModel):
 class RegisterIn(BaseModel):
     email: EmailStr
     password: str = Field(min_length=8, max_length=128)
-    phone: Optional[str] = Field(None, max_length=20, pattern=r"^\+?[0-9]{8,15}$")
+    phone: Optional[str] = Field(None, max_length=20)
     referralCode: Optional[str] = Field(None, max_length=16)
+
+    @field_validator("phone", mode="before")
+    @classmethod
+    def _phone(cls, v):
+           if v is None or (isinstance(v, str) and v.strip() == ""):
+               return None
+           v = v.strip()
+           if not re.match(r"^\+?[0-9]{8,15}$", v):
+               raise ValueError("Phone number format is invalid")
+           return v
 
     @field_validator("referralCode")
     @classmethod
