@@ -45,6 +45,8 @@ function AuthPanel() {
     } catch (err) {
       if (err.code === 'SELF_REFERRAL_DETECTED' || err.code === 'DEVICE_ALREADY_ASSOCIATED') {
         setModal({ open: true, maskedEmail: err.maskedEmail, message: err.message });
+      } else if (err.code === 'VALIDATION_ERROR' && err.details?.length) {
+        setError(err.details.map((d) => `${d.field}: ${d.issue}`).join(' | '));
       } else {
         setError(err.message);
       }
