@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: veloop-referral-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase: {name: veloop-db, property: connectionString}
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEVICE_TOKEN_SECRET
+        generateValue: true
+      - key: DEVICE_HASH_SECRET
+        generateValue: true
+      - key: IP_HASH_SECRET
+        generateValue: true
+      - key: AD_PROVIDER_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://veloop-referral-redesign.vercel.app
+      - key: REFERRAL_LINK_BASE
+        value: https://www.velooprewards.in/register
+
+databases:
+  - name: veloop-db
+    plan: free
