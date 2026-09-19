@@ -25,11 +25,14 @@ export function setToken(token) {
 }
 
 export class ApiError extends Error {
-  constructor({ code, message, status, maskedEmail }) {
+  constructor({ code, message, status, maskedEmail, details }) {
     super(message || 'Request failed');
     this.code = code || 'INTERNAL_ERROR';
     this.status = status;
     this.maskedEmail = maskedEmail || null;
+    this.details = details || null;
+  }
+}
   }
 }
 
@@ -66,6 +69,7 @@ export async function apiRequest(path, { method = 'GET', body, auth = true, idem
       message: payload?.message,
       status: response.status,
       maskedEmail: payload?.maskedEmail,
+      details: payload?.details,
     });
   }
 
